@@ -1,0 +1,35 @@
+name: Deathrun
+main: com.bobjoejim.deathrun.Deathrun
+version: 1.0
+author: Bobjoejim
+description: A plugin for the Deathrun minigame
+commands:
+  deathrun:
+    description: Deathrun help
+    usage: /deathrun
+    aliases: ["dr"]
+permissions:
+  dr.*:
+    description: Access to all Deathrun commands
+    default: op
+    children:
+      dr.join: true
+      dr.start: true
+      dr.startpoint: true
+      dr.endpoint: true
+      dr.set: true
+  dr.join:
+    description: Access to join Deathrun game
+    default: true
+  dr.forcestart:
+    description: Access for force starting a Deathrun game
+    default: op
+  dr.startpoint:
+    description: Access to set Deathrun start points
+    default: op
+  dr.endpoint:
+    description: Access to set Deathrun end points
+    default: op
+  dr.set:
+    description: Access to set a player as death or runner
+    default: op

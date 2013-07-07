@@ -1,0 +1,14 @@
+#Sets the minimum amount of players in a game
+minplayers: 2
+
+#Sets the maximum amount of players in a game
+maxplayers: 12
+
+#Sets the wait time until a game starts (in seconds)
+waittime: 30
+
+#Sets reward item. Default is no reward, but you can delete the '#' to have a reward.
+#reward: 264
+
+#DO NOT EDIT: Checks asynchronously for updates.
+updateAvailable: false
