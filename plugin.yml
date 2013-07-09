@@ -1,6 +1,6 @@
 name: Deathrun
 main: com.bobjoejim.deathrun.Deathrun
-version: 1.0
+version: 9.5
 author: Bobjoejim
 description: A plugin for the Deathrun minigame
 commands:
