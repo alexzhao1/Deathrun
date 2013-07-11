@@ -1,10 +1,10 @@
 package com.bobjoejim.deathrun;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +22,7 @@ public class Deathrun extends JavaPlugin {
 	public static ArrayList<Player> runners = new ArrayList<Player>();
 	public static ArrayList<Player> queue = new ArrayList<Player>();
 	public static ArrayList<ItemStack[]> keepInv = new ArrayList<ItemStack[]>();
+	public static ArrayList<Location> infoSigns = new ArrayList<Location>();
 	public static FileConfiguration config;
 	public static int minPlayers;
 	public static int maxPlayers;
@@ -34,8 +35,7 @@ public class Deathrun extends JavaPlugin {
 		loadConfigStuff();
 		getServer().getPluginManager().registerEvents(new DeathrunListeners(), this);
 		getServer().getPluginManager().registerEvents(new DeathrunSigns(), this);
-		DeathrunUpdateChecker update = new DeathrunUpdateChecker(this);
-		this.getServer().getScheduler().runTaskAsynchronously(this, update);
+		checkForUpdates();
 	}
 	@Override
 	public void onDisable() {
@@ -46,13 +46,18 @@ public class Deathrun extends JavaPlugin {
 		maxPlayers = config.getInt("maxplayers");
 		waitTime = config.getInt("waittime");
 	}
-	public boolean updateAvailable() {
-		return config.getBoolean("updateAvailable");
+	public void checkForUpdates() {
+		DeathrunUpdateChecker updateChecker = new DeathrunUpdateChecker(this, "");
+		if (updateChecker.updateAvailable()) {
+			this.getLogger().log(Level.INFO, "A new update is available (Using: "+this.getDescription().getVersion()+" Current: "+updateChecker.getVersion());
+			this.getLogger().log(Level.INFO, "Download at: "+updateChecker.getLink());
+		}
 	}
-	/**
+	/*
 	 * TODO: Questions:
 	 * lobby? ANSWER: yes
 	 * reward? ANSWER: idk
 	 * arenas? (multiple games at once?) ANSWER: eventually.
+	 * name tag (death/runner and colors, maybe tab list = ingame)
 	 */
 }

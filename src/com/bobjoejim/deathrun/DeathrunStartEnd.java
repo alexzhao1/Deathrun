@@ -1,5 +1,6 @@
 package com.bobjoejim.deathrun;
 
+import java.awt.Color;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class DeathrunStartEnd extends DeathrunCommandExecutor {
 			}
 		}
 	}
-	public static void drStart() {
+	public static void drStart() { // TODO: cancel tasks
 		boolean isOneDeath; // setting runners/deaths
 		if (players.size()<=6) {
 			isOneDeath=true;
@@ -39,9 +40,8 @@ public class DeathrunStartEnd extends DeathrunCommandExecutor {
 		}
 		DeathrunTeams.initRunner();
 		DeathrunTeams.initDeath();
-		
 	}
-	public static void checkQueue() { // TODO: FIX THE QUEUE IT'S COMPLETELY BROKEN I THINK
+	/*public static void checkQueue() { // TODO: FIX THE QUEUE IT'S COMPLETELY BROKEN I THINK
 		if (queue.size()>=Deathrun.minPlayers) {
 			if (queue.size()>=Deathrun.maxPlayers) { // if queue size exceeds max players
 				for (int i=0;i<Deathrun.maxPlayers;i++) {
@@ -55,6 +55,20 @@ public class DeathrunStartEnd extends DeathrunCommandExecutor {
 				drStart();
 			}
 		}
+	}*/
+	public static void checkQueue() {
+		if (queue.size() >= Deathrun.minPlayers) {
+			
+		}
+		/*
+		 * TODO: add a task for this.
+		 * ok here's the plan:
+		 * when queue size > min players send a message/start a task
+		 * basically either after set time limit or queue size > maxPlayers game starts
+		 * this task: when waitTime ends start the game.
+		 * another task where periodic messages: "Game will start when _ more players join"?
+		 * but yeah that's basically it. also update all infosigns
+		 */
 	}
 	public static void drEnd() {
 		for (Player p : deaths) {

@@ -1,43 +1,48 @@
 package com.bobjoejim.deathrun;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
 
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-public class DeathrunUpdateChecker extends BukkitRunnable {
-	private final String address = "https://raw.github.com/alexzhao1/Deathrun/master/plugin.yml";
-	
-	private Deathrun plugin = null;
-	public DeathrunUpdateChecker(Deathrun plugin) {
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class DeathrunUpdateChecker {
+	private Deathrun plugin;
+	private URL filesFeed;
+	private String version;
+	private String link;
+	public DeathrunUpdateChecker(Deathrun plugin, String url) {
 		this.plugin = plugin;
-	}
-	public void run() {
 		try {
-			float remoteVersion = Float.parseFloat(getVersion());
-			float localVersion = Float.parseFloat(plugin.getDescription().getVersion());
-			if (remoteVersion > localVersion) {
-				plugin.getLogger().log(Level.INFO, "An update is available! (Using: "+localVersion+" Current: "+remoteVersion);
-				plugin.getConfig().set("updateAvailable", true);
-			} else {
-				plugin.getLogger().log(Level.INFO, "Plugin up to date! (Current: "+remoteVersion);
-				plugin.getConfig().set("updateAvailable", false);
+			filesFeed = new URL(url);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	public boolean updateAvailable() {
+		try {
+			InputStream input = this.filesFeed.openConnection().getInputStream();
+			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+			Node latestFile = doc.getElementsByTagName("item").item(0);
+			NodeList children = latestFile.getChildNodes();
+			this.version = children.item(1).getTextContent().replaceAll("[a-zA-Z ]", "");
+			this.link = children.item(3).getTextContent();
+			if (!plugin.getDescription().getVersion().equals(this.version)) {
+				return true;
 			}
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.WARNING, "An error occured while trying to check for updates.");
+			e.printStackTrace();
 		}
+		return false;
 	}
-	private String getVersion() throws Exception {
-		URL url = new URL(address);
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-		String version = null;
-		for (int i=0;i<3;i++) {
-			version = br.readLine();
-		}
-		return version.substring(9, version.length());
+	public String getVersion() {
+		return this.version;
+	}
+	public String getLink() {
+		return this.link;
 	}
 }

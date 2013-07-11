@@ -23,7 +23,7 @@ public class CountdownTask extends BukkitRunnable {
 		Sign sign;
 		for (int i=0;i<infoSigns.size();i++) {
 			sign = (Sign) infoSigns.get(i).getBlock();
-			sign.setLine(1, "0:"+waitTime);
+			sign.setLine(3, ChatColor.BOLD+"Waiting "+ChatColor.RESET+" 0:"+waitTime);
 			sign.update();
 		}
 		if (waitTime<=10) {
@@ -32,5 +32,8 @@ public class CountdownTask extends BukkitRunnable {
 			}
 		}
 		waitTime--;
+	}
+	public int getWaitTime() {
+		return this.waitTime;
 	}
 }

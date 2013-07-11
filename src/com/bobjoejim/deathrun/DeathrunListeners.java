@@ -2,6 +2,7 @@ package com.bobjoejim.deathrun;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -44,8 +45,8 @@ public class DeathrunListeners implements Listener {
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
 		if (DeathrunCommandExecutor.isInGame(p)) {
-			p.teleport(DeathrunCommandExecutor.lobbyStartPoint);
-			p.sendMessage(DeathrunCommandExecutor.prefix+ChatColor.RED+"You died! Spectate by right-clicking the \"Spectate\" sign.");
+			p.teleport(Deathrun.lobbyStartPoint);
+			p.sendMessage(Deathrun.prefix+ChatColor.RED+"You died! Spectate by right-clicking the \"Spectate\" sign.");
 			
 		}
 	}
@@ -55,13 +56,23 @@ public class DeathrunListeners implements Listener {
 		if (DeathrunCommandExecutor.isInGame(p)) {
 			p.setHealth(0);
 			if (DeathrunTeams.isDeath(p)) {
-				DeathrunCommandExecutor.deaths.remove(p);
+				Deathrun.deaths.remove(p);
 				p.setWalkSpeed(0);
 			}
-			if (DeathrunTeams.isRunner(p)) DeathrunCommandExecutor.runners.remove(p);
-			DeathrunCommandExecutor.players.remove(p);
-			DeathrunCommandExecutor.keepInv.remove(p);
-			Bukkit.getServer().broadcastMessage(DeathrunCommandExecutor.prefix+ChatColor.GREEN+p.getName()+" was killed for leaving the game!");
+			if (DeathrunTeams.isRunner(p)) Deathrun.runners.remove(p);
+			Deathrun.players.remove(p);
+			Deathrun.keepInv.remove(p);
+			Bukkit.getServer().broadcastMessage(Deathrun.prefix+ChatColor.GREEN+p.getName()+" was killed for leaving the game!");
+		}
+	}
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player p = event.getPlayer();
+		Location location = p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY()-1, p.getLocation().getBlockZ()).getLocation();
+		if (location.equals(Deathrun.minigameTpPoint)) {
+			if (DeathrunTeams.isRunner(p)) {
+				// TODO: handle tp/messages
+			}
 		}
 	}
 }

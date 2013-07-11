@@ -9,7 +9,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor {
+public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor { // TODO: check if all points have been set
 	public DeathrunCommandExecutor(Deathrun plugin) {} // TODO: worldedit functionality (ex: not just one block)
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -29,15 +29,7 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 				}
 			} else if (args[0].equalsIgnoreCase("join")) { //TODO: add queue, add other people
 				if (sender.hasPermission("deathrun.join")) {
-					if (!isInGame(p)) {
-						queue.add(p);
-						keepInv.add(p.getInventory().getContents());
-						sender.sendMessage(prefix+ChatColor.GREEN+"Successfully added you to the queue. You will be notified when your match is ready.");
-						return true;
-					} else {
-						sender.sendMessage(prefix+ChatColor.RED+"You're already in a game!");
-						return false;
-					}
+					join((Player) sender);
 				} else {
 					sender.sendMessage(prefix+ChatColor.RED+"You don't have permission!");
 					return false;
@@ -142,6 +134,8 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 				}
 			} else if (args[0].equalsIgnoreCase("reload")) {
 				this.reloadConfig();
+				loadConfigStuff();
+				checkForUpdates();
 				sender.sendMessage(prefix+ChatColor.GREEN+"Successfully reloaded.");
 				return true;
 			}
@@ -182,5 +176,16 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 			return true;
 		}
 		return false;
+	}
+	public static boolean join(Player p) {
+		if (!isInGame(p)) {
+			queue.add(p);
+			keepInv.add(p.getInventory().getContents());
+			p.sendMessage(prefix+ChatColor.GREEN+"Successfully added you to the queue. You will be notified when your match is ready.");
+			return true;
+		} else {
+			p.sendMessage(prefix+ChatColor.RED+"You're already in a game!");
+			return false;
+		}
 	}
 }
