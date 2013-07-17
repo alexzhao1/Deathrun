@@ -15,7 +15,7 @@ public class CheckQueueTask extends BukkitRunnable {
 		this.waitTime = waitTime;
 	}
 	public void run() {
-		if (this.plugin.queue.size() >= this.plugin.maxPlayers) {
+		if (this.plugin.players.size() >= this.plugin.maxPlayers) {
 			for (Player p: this.plugin.players) {
 				p.sendMessage("The game is now starting! Good luck!");
 			}

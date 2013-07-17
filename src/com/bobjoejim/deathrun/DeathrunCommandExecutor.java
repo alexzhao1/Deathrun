@@ -29,7 +29,7 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 				}
 			} else if (args[0].equalsIgnoreCase("join")) { //TODO: add queue, add other people
 				if (sender.hasPermission("deathrun.join")) {
-					join((Player) sender);
+					join((Player) sender); // TODO: check queue
 				} else {
 					sender.sendMessage(prefix+ChatColor.RED+"You don't have permission!");
 					return false;
@@ -88,10 +88,10 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 				if (args.length==3) {
 					if (sender.hasPermission("deathrun.set")) {
 						if (Bukkit.getServer().getPlayer(args[1])!=null) {
-							if (isInGame(Bukkit.getServer().getPlayer(args[1]))) {
+							if (DeathrunTeams.isInGame(Bukkit.getServer().getPlayer(args[1]))) {
 								int code=-1;
 								if (args[2].equalsIgnoreCase("death")) {
-									setDeath(Bukkit.getServer().getPlayer(args[1]), code);
+									DeathrunTeams.setDeath(Bukkit.getServer().getPlayer(args[1]), code);
 									if (code==1) {
 										sender.sendMessage(prefix+ChatColor.GREEN+"Successfully moved player from runner to death!");
 										return true;
@@ -102,7 +102,7 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 										sender.sendMessage(prefix+ChatColor.GREEN+"Successfully added player to death!");
 									}
 								} else if (args[2].equalsIgnoreCase("runner")) {
-									setRunner(Bukkit.getServer().getPlayer(args[1]), code);
+									DeathrunTeams.setRunner(Bukkit.getServer().getPlayer(args[1]), code);
 									if (code==1) {
 										sender.sendMessage(prefix+ChatColor.GREEN+"Successfully moved player from death to runner!");
 										return true;
@@ -141,44 +141,8 @@ public class DeathrunCommandExecutor extends Deathrun implements CommandExecutor
 			}
 		return false;
 	}
-	public static void setDeath(Player p, int code) {
-		if (runners.contains(p) && !deaths.contains(p)) { // in runners, not deaths
-			runners.remove(p);
-			deaths.add(p);
-			code=0;
-		}
-		if (!runners.contains(p) && deaths.contains(p)) { // in deaths, not runners
-			code=1;
-		}
-		if (!runners.contains(p) && !deaths.contains(p)) { // in neither, but in players
-			deaths.add(p);
-			code=2;
-		}
-		code=-1;
-	}
-	public static void setRunner(Player p, int code) {
-		if (deaths.contains(p) && !runners.contains(p)) { // in runners, not deaths
-			deaths.remove(p);
-			runners.add(p);
-			code=0;
-		}
-		if (!deaths.contains(p) && runners.contains(p)) { // in deaths, not runners
-			code=1;
-		}
-		if (!deaths.contains(p) && !runners.contains(p)) { // in neither, but in players
-			runners.add(p);
-			code=2;
-		}
-		code=-1;
-	}
-	public static boolean isInGame(Player p) {
-		if (players.contains(p)) {
-			return true;
-		}
-		return false;
-	}
 	public static boolean join(Player p) {
-		if (!isInGame(p)) {
+		if (!DeathrunTeams.isInGame(p)) {
 			queue.add(p);
 			keepInv.add(p.getInventory().getContents());
 			p.sendMessage(prefix+ChatColor.GREEN+"Successfully added you to the queue. You will be notified when your match is ready.");

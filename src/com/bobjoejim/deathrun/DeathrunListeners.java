@@ -16,7 +16,7 @@ public class DeathrunListeners implements Listener {
 		Entity damager = event.getDamager();
 		Entity hurt = event.getEntity();
 		if (damager instanceof Player && hurt instanceof Player) {
-			if (DeathrunCommandExecutor.isInGame((Player) damager) && DeathrunCommandExecutor.isInGame((Player) hurt)) {
+			if (DeathrunTeams.isInGame((Player) damager) && DeathrunTeams.isInGame((Player) hurt)) {
 				if (DeathrunTeams.isDeath((Player) damager) && DeathrunTeams.isDeath((Player) hurt)) {
 					event.setCancelled(true);
 				} else if (DeathrunTeams.isRunner((Player) damager) && DeathrunTeams.isRunner((Player) hurt)) {
@@ -29,7 +29,7 @@ public class DeathrunListeners implements Listener {
 	public void onPlayerRegen(EntityRegainHealthEvent event) {
 		if (event.getEntityType() == EntityType.PLAYER) {
 			Player p = (Player) event.getEntity();
-			if (DeathrunCommandExecutor.isInGame(p)) {
+			if (DeathrunTeams.isInGame(p)) {
 				event.setCancelled(true);
 			}
 		}
@@ -37,14 +37,14 @@ public class DeathrunListeners implements Listener {
 	@EventHandler
 	public void onItemPickup(PlayerPickupItemEvent event) {
 		Player p = event.getPlayer();
-		if (DeathrunCommandExecutor.isInGame(p)) {
+		if (DeathrunTeams.isInGame(p)) {
 			event.setCancelled(true);
 		}
 	}
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
 		Player p = event.getPlayer();
-		if (DeathrunCommandExecutor.isInGame(p)) {
+		if (DeathrunTeams.isInGame(p)) {
 			p.teleport(Deathrun.lobbyStartPoint);
 			p.sendMessage(Deathrun.prefix+ChatColor.RED+"You died! Spectate by right-clicking the \"Spectate\" sign.");
 			
@@ -53,7 +53,7 @@ public class DeathrunListeners implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
-		if (DeathrunCommandExecutor.isInGame(p)) {
+		if (DeathrunTeams.isInGame(p)) {
 			p.setHealth(0);
 			if (DeathrunTeams.isDeath(p)) {
 				Deathrun.deaths.remove(p);
@@ -63,16 +63,6 @@ public class DeathrunListeners implements Listener {
 			Deathrun.players.remove(p);
 			Deathrun.keepInv.remove(p);
 			Bukkit.getServer().broadcastMessage(Deathrun.prefix+ChatColor.GREEN+p.getName()+" was killed for leaving the game!");
-		}
-	}
-	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event) {
-		Player p = event.getPlayer();
-		Location location = p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY()-1, p.getLocation().getBlockZ()).getLocation();
-		if (location.equals(Deathrun.minigameTpPoint)) {
-			if (DeathrunTeams.isRunner(p)) {
-				// TODO: handle tp/messages
-			}
 		}
 	}
 }

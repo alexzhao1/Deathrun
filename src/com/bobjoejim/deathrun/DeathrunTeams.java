@@ -4,11 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-public class DeathrunTeams extends DeathrunCommandExecutor {
+public class DeathrunTeams extends Deathrun {
 
-	public DeathrunTeams(Deathrun plugin) {
-		super(plugin);
-	}
+	public DeathrunTeams(Deathrun plugin) {}
 	public static void initDeath() {
 		for (Player p : deaths) {
 			p.setGameMode(GameMode.ADVENTURE);
@@ -32,6 +30,42 @@ public class DeathrunTeams extends DeathrunCommandExecutor {
 	}
 	public static boolean isRunner(Player p) {
 		if (runners.contains(p)) {
+			return true;
+		}
+		return false;
+	}
+	public static void setDeath(Player p, int code) {
+		if (runners.contains(p) && !deaths.contains(p)) { // in runners, not deaths
+			runners.remove(p);
+			deaths.add(p);
+			code=0;
+		}
+		if (!runners.contains(p) && deaths.contains(p)) { // in deaths, not runners
+			code=1;
+		}
+		if (!runners.contains(p) && !deaths.contains(p)) { // in neither, but in players
+			deaths.add(p);
+			code=2;
+		}
+		code=-1;
+	}
+	public static void setRunner(Player p, int code) {
+		if (deaths.contains(p) && !runners.contains(p)) { // in runners, not deaths
+			deaths.remove(p);
+			runners.add(p);
+			code=0;
+		}
+		if (!deaths.contains(p) && runners.contains(p)) { // in deaths, not runners
+			code=1;
+		}
+		if (!deaths.contains(p) && !runners.contains(p)) { // in neither, but in players
+			runners.add(p);
+			code=2;
+		}
+		code=-1;
+	}
+	public static boolean isInGame(Player p) {
+		if (players.contains(p)) {
 			return true;
 		}
 		return false;

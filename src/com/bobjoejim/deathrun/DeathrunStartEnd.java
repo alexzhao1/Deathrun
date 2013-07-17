@@ -7,13 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class DeathrunStartEnd extends DeathrunCommandExecutor {
+public class DeathrunStartEnd extends Deathrun {
 	private static Random random = new Random();
 	public static boolean inProgress = false;
 	public static boolean deathsWin = false;
-	public DeathrunStartEnd(Deathrun plugin) {
-		super(plugin);
-	}
+	
+	public DeathrunStartEnd(Deathrun plugin) {}
 	public static void enterLobby() {
 		final int waitTime = Deathrun.waitTime;
 		for (int i=0;i<players.size();i++) {
@@ -32,11 +31,11 @@ public class DeathrunStartEnd extends DeathrunCommandExecutor {
 		}
 		int code = 0;
 		for (int i=0;i<players.size();i++) {
-			setRunner(players.get(i), code);
+			DeathrunTeams.setRunner(players.get(i), code);
 		}
-		setDeath(players.get(random.nextInt(players.size())), code);
+		DeathrunTeams.setDeath(players.get(random.nextInt(players.size())), code);
 		if (!isOneDeath) {
-			setDeath(runners.get(random.nextInt(runners.size())), code);
+			DeathrunTeams.setDeath(runners.get(random.nextInt(runners.size())), code);
 		}
 		DeathrunTeams.initRunner();
 		DeathrunTeams.initDeath();
@@ -58,7 +57,11 @@ public class DeathrunStartEnd extends DeathrunCommandExecutor {
 	}*/
 	public static void checkQueue() {
 		if (queue.size() >= Deathrun.minPlayers) {
-			
+			if (queue.size() >= Deathrun.maxPlayers) {
+				for (int i=0;i<Deathrun.maxPlayers;i++) {
+					
+				}
+			}
 		}
 		/*
 		 * TODO: add a task for this.

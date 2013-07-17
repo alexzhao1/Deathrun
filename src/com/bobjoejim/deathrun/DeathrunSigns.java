@@ -13,7 +13,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class DeathrunSigns implements Listener { // TODO: make another sign class
-
+	// TODO: get rid of the [Deathrun] stuff? kinda useless.
 	private Deathrun plugin;
 	@EventHandler
 	public void createClassSign(SignChangeEvent event) {
@@ -33,6 +33,9 @@ public class DeathrunSigns implements Listener { // TODO: make another sign clas
 				this.plugin.infoSigns.add(event.getBlock().getLocation());
 			} else if (signType.equalsIgnoreCase("spectate")) {
 				event.setLine(1, "Spectate match");
+			} else if (signType.equalsIgnoreCase("minigametp")) {
+				event.setLine(1, ChatColor.BOLD+"Right click to");
+				event.setLine(2, ChatColor.BOLD+"win!");
 			} else {
 				event.setLine(1, ChatColor.RED+"Invalid line");
 			}
@@ -57,6 +60,8 @@ public class DeathrunSigns implements Listener { // TODO: make another sign clas
 					// do absolutely nothing. yay.
 				} else if (signType.equals("Spectate match")) {
 					// TODO: set up spectating
+				} else if (signType.equals("Right click to")) {
+					// TODO: set up minigame pvp/tp
 				} else {
 					plugin.getLogger().log(Level.WARNING, "Error occured with sign at "+sign.getX()+", "+sign.getY()+", "+sign.getZ());
 				}
