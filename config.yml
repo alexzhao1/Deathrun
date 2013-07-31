@@ -10,5 +10,5 @@ waittime: 30
 #Sets reward item. Default is no reward, but you can delete the '#' to have a reward.
 #reward: 264
 
-#Sets length of round (in seconds)
+#Sets length of round (in seconds).
 gamelength: 600
